@@ -9,6 +9,7 @@ export class RobotRepository implements Data<Robot> {
             required: true,
             unique: true,
         },
+        img: String,
         speed: Number,
         strength: Number,
         creationDate: String,
