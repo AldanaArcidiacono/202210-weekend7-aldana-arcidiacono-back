@@ -55,25 +55,21 @@ export class RobotController {
     async delete(req: Request, res: Response, next: NextFunction) {
         try {
             await this.repository.delete(req.params.id);
-            res.json({});
+            res.json({ id: req.params.id });
         } catch (error) {
             next(this.#createHttpError(error as Error));
         }
     }
 
     #createHttpError(error: Error) {
-        if ((error as Error).message === 'Not found id') {
-            const httpError = new HTTPError(
-                404,
-                'Not Found',
-                (error as Error).message
-            );
+        if (error.message === 'Not found id') {
+            const httpError = new HTTPError(404, 'Not Found', error.message);
             return httpError;
         }
         const httpError = new HTTPError(
             503,
             'Service unavailable',
-            (error as Error).message
+            error.message
         );
         return httpError;
     }
