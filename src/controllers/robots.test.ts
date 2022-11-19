@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { RobotRepository } from '../data/robots.repository';
 import { RobotController } from './robots';
-import { CustomError, HTTPError } from '../interface/error';
+import { HTTPError } from '../interface/error';
 
 jest.mock('../data/robots.repository');
 
@@ -134,6 +134,13 @@ describe('Given the robots controller, but everything goes wrong', () => {
         test('It should throw an error', async () => {
             await robotController.delete(req as Request, res as Response, next);
             expect(error).toBeInstanceOf(Error);
+            expect(error).toBeInstanceOf(HTTPError);
+        });
+    });
+
+    describe('When we instantiate delete(), with a wrong id', () => {
+        test('It should throw an error', async () => {
+            await robotController.delete(req as Request, res as Response, next);
             expect(error).toBeInstanceOf(HTTPError);
         });
     });
