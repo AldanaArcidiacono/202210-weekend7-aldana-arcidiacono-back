@@ -52,7 +52,6 @@ export class RobotRepository implements Data<Robot> {
 
     disconnect() {
         mongoose.disconnect();
-        console.log(mongoose.connection.readyState);
     }
 
     getModel() {
