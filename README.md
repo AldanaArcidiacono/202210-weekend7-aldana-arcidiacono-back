@@ -24,4 +24,4 @@ Tendrás que crear una API REST con Express, con los siguientes endpoints:
 
 Recuerda que cada response debe ir con un código de status adecuado y que todos los body de las responses tienen que ser **objetos** en JSON.
 
-Sora decirlo: **TESTEAMOS** todo y lo mostramos en **SonarCloud**.
+Sobra decirlo: **TESTEAMOS** todo y lo mostramos en **SonarCloud**.
