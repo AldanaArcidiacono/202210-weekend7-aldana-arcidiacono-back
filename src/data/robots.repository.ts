@@ -18,13 +18,7 @@ export class RobotRepository implements Data<Robot> {
     #Model = model('Robot', this.#schema, 'robots');
 
     constructor() {
-        this.#schema.set('toJSON', {
-            transform: (_document, returnedObject) => {
-                returnedObject.id = returnedObject._id;
-                delete returnedObject.__v;
-                delete returnedObject._id;
-            },
-        });
+        //
     }
 
     async getAll(): Promise<Array<Robot>> {
@@ -56,7 +50,7 @@ export class RobotRepository implements Data<Robot> {
         return { id: id };
     }
 
-    #disconnect() {
+    disconnect() {
         mongoose.disconnect();
         console.log(mongoose.connection.readyState);
     }
