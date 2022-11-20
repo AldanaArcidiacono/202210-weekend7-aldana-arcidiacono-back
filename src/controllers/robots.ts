@@ -25,7 +25,7 @@ export class RobotController {
             const robots = await this.repository.get(req.params.id);
             res.json({ robots });
         } catch (error) {
-            next(this.#createHttpError(error as Error));
+            next(this.createHttpError(error as Error));
         }
     }
 
@@ -48,7 +48,7 @@ export class RobotController {
             const robots = await this.repository.patch(req.params.id, req.body);
             res.json({ robots });
         } catch (error) {
-            next(this.#createHttpError(error as Error));
+            next(this.createHttpError(error as Error));
         }
     }
 
@@ -57,11 +57,11 @@ export class RobotController {
             await this.repository.delete(req.params.id);
             res.json({ id: req.params.id });
         } catch (error) {
-            next(this.#createHttpError(error as Error));
+            next(this.createHttpError(error as Error));
         }
     }
 
-    #createHttpError(error: Error) {
+    createHttpError(error: Error) {
         if (error.message === 'Not found id') {
             const httpError = new HTTPError(404, 'Not Found', error.message);
             return httpError;

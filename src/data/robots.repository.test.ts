@@ -1,3 +1,4 @@
+import { Mongoose, MongooseError } from 'mongoose';
 import { dbConnect } from '../db.conect';
 import { RobotRepository } from './robots.repository';
 
@@ -50,7 +51,7 @@ describe('Given the robots repository,', () => {
         test('If the id is not valid, it should throw an error', async () => {
             expect(async () => {
                 await repository.get(testIds[3]);
-            }).rejects.toThrowError();
+            }).rejects.toThrow();
         });
     });
 
@@ -79,8 +80,8 @@ describe('Given the robots repository,', () => {
 
         test('If the id is not valid, it should throw an error', async () => {
             expect(async () => {
-                await repository.patch(testIds[3], { name: 'pepe' });
-            }).rejects.toThrowError();
+                await repository.patch(testIds[3], {});
+            }).rejects.toThrowError(MongooseError);
         });
     });
 
@@ -90,12 +91,10 @@ describe('Given the robots repository,', () => {
             expect(result).toEqual({ id: testIds[0] });
         });
 
-        // Revisar test, pasa linea pero no pasa test
-        // test('If the id is wrong, it should throw an error', async () => {
-        //     await repository.delete(testIds[0]);
-        //     expect(async () => {
-        //         await repository.delete(testIds[0]);
-        //     }).rejects.toThrow();
-        // });
+        test('If the id is wrong, it should throw an error', async () => {
+            expect(async () => {
+                await repository.delete(testIds[3]);
+            }).rejects.toThrowError(MongooseError);
+        });
     });
 });
