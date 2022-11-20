@@ -144,4 +144,12 @@ describe('Given the robots controller, but everything goes wrong', () => {
             expect(error).toBeInstanceOf(HTTPError);
         });
     });
+
+    describe('When we instantiate createHttpError(),', () => {
+        test('It should throw the correct message', async () => {
+            error.message = 'Not found id';
+            await robotController.createHttpError(error);
+            expect(error.message).toBe('Not found id');
+        });
+    });
 });
