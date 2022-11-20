@@ -1,4 +1,4 @@
-import { Mongoose, MongooseError } from 'mongoose';
+import { MongooseError } from 'mongoose';
 import { dbConnect } from '../db.conect';
 import { RobotRepository } from './robots.repository';
 
