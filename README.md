@@ -25,3 +25,26 @@ Tendrás que crear una API REST con Express, con los siguientes endpoints:
 Recuerda que cada response debe ir con un código de status adecuado y que todos los body de las responses tienen que ser **objetos** en JSON.
 
 Sobra decirlo: **TESTEAMOS** todo y lo mostramos en **SonarCloud**.
+
+# Challenge 1 Week 8 - Ampliar Challenge Robots
+
+## TESTEAR
+
+-   BACK: Añadir Modelo Usuarios y su endpoint (REGISTER/LOGIN)
+    -   En el login enviar el TOKEN al usuario
+
+## TESTEAR
+
+-   BACK:
+    A. Modificar los endpoints de Robots, excepto el getAll, para que solo sean accesibles a usuarios logueados
+    B. Modificar todos los endpoints de Robots, para que solo sean accesibles a usuarios logueados
+
+## TESTEAR
+
+-   BACK: Completar los CRUDS de robots
+
+## TESTEAR
+
+-   FRONT: Añadir formulario de crear/registrar nuevos usuarios
+-   FRONT: Añadir formulario de login para los usuarios
+-   FRONT: Añadir el header de Authorization para poder acceder a los endpoints de robots protegidos en el backend cuando el usuario ha hecho login

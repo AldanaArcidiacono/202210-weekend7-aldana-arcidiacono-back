@@ -1,9 +1,9 @@
 import { NextFunction, Request, Response } from 'express';
-import { RobotRepository } from '../data/robots.repository';
+import { RobotRepository } from '../repository/robots';
 import { RobotController } from './robots';
 import { HTTPError } from '../interface/error';
 
-jest.mock('../data/robots.repository');
+jest.mock('../repository/robots');
 
 const mockData = [
     {

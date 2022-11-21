@@ -1,6 +1,6 @@
 import { MongooseError } from 'mongoose';
 import { dbConnect } from '../db.conect';
-import { RobotRepository } from './robots.repository';
+import { RobotRepository } from './robots';
 
 const mockData = [
     {
@@ -29,10 +29,6 @@ describe('Given the robots repository,', () => {
         await repository.getModel().insertMany(mockData);
         const data = await repository.getModel().find();
         testIds = [data[0].id, data[1].id];
-    });
-
-    afterAll(async () => {
-        await repository.disconnect();
     });
 
     describe('When we instantiate getAll()', () => {
@@ -93,8 +89,24 @@ describe('Given the robots repository,', () => {
 
         test('If the id is wrong, it should throw an error', async () => {
             expect(async () => {
-                await repository.delete(testIds[3]);
-            }).rejects.toThrowError(MongooseError);
+                await repository.delete(23);
+            }).rejects.toThrow();
         });
+
+        test('If the id is wrong, it should throw an error', async () => {
+            expect(async () => {
+                await repository.delete('6378fbf8fbdf746f860da478');
+            }).rejects.toThrow();
+        });
+
+        test('Then if id is bad formate delete should throw an error', async () => {
+            expect(async () => {
+                await repository.delete(testIds[0]);
+            }).rejects.toThrow();
+        });
+    });
+
+    afterAll(async () => {
+        await repository.disconnect();
     });
 });
