@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import { HTTPError } from '../interface/error';
+import { CustomError, HTTPError } from '../interface/error';
 import { UsersRepository } from '../repository/users';
 import { UsersController } from './users';
 
@@ -47,33 +47,25 @@ describe('Given the users controller,', () => {
 });
 
 describe('Given the users controller, but everything goes wrong', () => {
-    let error: HTTPError;
-    beforeEach(() => {
-        error = new HTTPError(404, 'Not found id', 'message of error');
-    });
+    const error: CustomError = new HTTPError(
+        404,
+        'Not found id',
+        'message of error'
+    );
 
-    UsersRepository.prototype.get = jest.fn().mockRejectedValue(['Robot']);
-    UsersRepository.prototype.post = jest.fn().mockRejectedValue(['Robot']);
-
+    UsersRepository.prototype.get = jest.fn().mockRejectedValue('User');
+    UsersRepository.prototype.post = jest.fn().mockRejectedValue(['User']);
     const repository = new UsersRepository();
     const userController = new UsersController(repository);
-
     const req: Partial<Request> = {};
     const res: Partial<Response> = {
         json: jest.fn(),
     };
     const next: NextFunction = jest.fn();
 
-    describe('When we instantiate get(),', () => {
-        test('It should throw an error', async () => {
-            await userController.register(
-                req as Request,
-                res as Response,
-                next
-            );
-            expect(error).toBeInstanceOf(Error);
-            expect(error).toBeInstanceOf(HTTPError);
-        });
+    test('Then if something went wrong register should throw an error', async () => {
+        await userController.register(req as Request, res as Response, next);
+        expect(error).toBeInstanceOf(HTTPError);
     });
 
     describe('When we instantiate post()', () => {
