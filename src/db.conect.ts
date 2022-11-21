@@ -1,6 +1,4 @@
 import mongoose from 'mongoose';
-import debugCreator from 'debug';
-const debug = debugCreator('http');
 import { USER, CLUSTER, PASSWORD } from './config.js';
 
 export function dbConnect() {
@@ -10,7 +8,5 @@ export function dbConnect() {
             : 'WeekendChallengeTesting';
     let uri = `mongodb+srv://${USER}:${PASSWORD}`;
     uri += `@${CLUSTER}/${DBName}?retryWrites=true&w=majority`;
-    debug({ uri });
-    debug(DBName);
     return mongoose.connect(uri);
 }
