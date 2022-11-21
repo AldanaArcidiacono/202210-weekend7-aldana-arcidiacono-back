@@ -7,7 +7,6 @@ export const errorManager = (
     resp: Response,
     _next: NextFunction
 ) => {
-    _next;
     console.log(
         error.name,
         error.statusCode,
