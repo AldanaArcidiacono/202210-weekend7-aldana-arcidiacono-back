@@ -20,8 +20,6 @@ describe('Given createToken()...', () => {
 
 describe('Given verifyToken()...', () => {
     const token = createToken(mockPayload);
-    console.log(token);
-
     describe('When token is valid...', () => {
         test('Then...', () => {
             const result = verifyToken(token);
