@@ -24,4 +24,8 @@ export class UsersRepository implements BasicData<User> {
         if (!result) throw new Error('User not found');
         return result as unknown as User;
     }
+
+    getUserModel() {
+        return this.#Model;
+    }
 }
