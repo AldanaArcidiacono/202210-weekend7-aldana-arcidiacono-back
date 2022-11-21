@@ -1,6 +1,5 @@
 import { Router } from 'express';
 import { UsersController } from '../controllers/users.js';
-import { logged } from '../middleware/interceptor.js';
 import { UsersRepository } from '../repository/users.js';
 
 export const usersRouter = Router();
