@@ -2,8 +2,12 @@ import { NextFunction, Request, Response } from 'express';
 import { CustomError } from '../interface/error';
 
 export const errorManager = () => {
-    (error: CustomError, _req: Request, resp: Response, next: NextFunction) => {
-        next;
+    (
+        error: CustomError,
+        _req: Request,
+        resp: Response,
+        _next: NextFunction
+    ) => {
         console.log(
             error.name,
             error.statusCode,
