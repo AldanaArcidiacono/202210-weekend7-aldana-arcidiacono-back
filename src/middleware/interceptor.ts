@@ -4,7 +4,7 @@ import { HTTPError } from '../interface/error.js';
 import { verifyToken } from '../services/auth.js';
 
 export interface ExtraRequest extends Request {
-    payload: JwtPayload;
+    payload?: JwtPayload;
 }
 
 export const logged = (
@@ -14,7 +14,7 @@ export const logged = (
 ) => {
     const authString = req.get('Authorization');
     if (!authString || authString?.slice(1, 6) !== 'Bearer') {
-        next(new HTTPError(403, 'Forbidden', 'Incorrect user or password')); //Te manda al middleware de errores
+        next(new HTTPError(403, 'Forbidden', 'Incorrect user or password'));
         return;
     }
     try {
