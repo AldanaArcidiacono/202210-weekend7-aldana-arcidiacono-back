@@ -1,25 +1,9 @@
-import mongoose, { model, Schema } from 'mongoose';
-import { ProtoRobot, Robot } from '../entities/robots.js';
+import mongoose, { model } from 'mongoose';
+import { ProtoRobot, Robot, robotSchema } from '../entities/robots.js';
 import { Data, id } from './data.js';
 
 export class RobotRepository implements Data<Robot> {
-    #schema = new Schema({
-        name: {
-            type: String,
-            required: true,
-            unique: true,
-        },
-        img: String,
-        speed: Number,
-        strength: Number,
-        creationDate: String,
-    });
-
-    #Model = model('Robot', this.#schema, 'robots');
-
-    constructor() {
-        //
-    }
+    #Model = model('Robot', robotSchema, 'robots');
 
     async getAll(): Promise<Array<Robot>> {
         return this.#Model.find();
@@ -31,7 +15,16 @@ export class RobotRepository implements Data<Robot> {
         return result as Robot;
     }
 
+    async find(search: {
+        [key: string]: string | number | Date;
+    }): Promise<Robot> {
+        const result = await this.#Model.findOne(search); //as Robot;
+        if (!result) throw new Error('Not found id');
+        return result as unknown as Robot;
+    }
+
     async post(newRobot: ProtoRobot): Promise<Robot> {
+        newRobot.date = this.#generateDate(newRobot.date as string);
         const result = await this.#Model.create(newRobot);
         return result as Robot;
     }
@@ -45,13 +38,20 @@ export class RobotRepository implements Data<Robot> {
     }
 
     async delete(id: id): Promise<{ id: id }> {
-        const result = (await this.#Model.findByIdAndDelete(id)) as Robot;
+        const result = await this.#Model.findByIdAndDelete(id);
         if (result === null) throw new Error('Not found id');
-        return { id: id } as unknown as Promise<Robot>;
+        return { id: id };
     }
 
     disconnect() {
         mongoose.disconnect();
+    }
+
+    #generateDate(date: string | undefined) {
+        if (!date) return new Date();
+        const validDate =
+            new Date(date) === new Date('') ? new Date() : new Date(date);
+        return validDate;
     }
 
     getModel() {
