@@ -75,7 +75,9 @@ describe('Given the robots controller,', () => {
 
     describe('When we instantiate delete(), with an id', () => {
         test('It should return an object with the deleted id', async () => {
-            //
+            req.params = { id: '1234dsf' };
+            await robotController.delete(req as Request, res as Response, next);
+            expect(res.json).toHaveBeenCalledWith(req.params);
         });
     });
 });
