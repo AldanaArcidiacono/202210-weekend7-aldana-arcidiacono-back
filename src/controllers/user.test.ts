@@ -2,7 +2,6 @@ import { NextFunction, Request, Response } from 'express';
 import { CustomError, HTTPError } from '../interface/error';
 import { RobotRepository } from '../repository/robots';
 import { UsersRepository } from '../repository/users';
-import { RobotController } from './robots';
 import { UsersController } from './users';
 
 jest.mock('../repository/robots');
