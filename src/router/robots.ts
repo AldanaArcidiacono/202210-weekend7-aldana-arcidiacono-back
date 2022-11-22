@@ -11,7 +11,7 @@ const controller = new RobotController(
     new UsersRepository()
 );
 
-robotsRouter.get('/', logged, controller.getAll.bind(controller));
+robotsRouter.get('/', controller.getAll.bind(controller));
 robotsRouter.get('/:idRobot', logged, controller.get.bind(controller));
 robotsRouter.post('/create', logged, controller.post.bind(controller));
 robotsRouter.patch(
