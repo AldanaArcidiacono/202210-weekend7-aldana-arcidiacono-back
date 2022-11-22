@@ -3,7 +3,6 @@ import { RobotRepository } from '../repository/robots';
 import { RobotController } from './robots';
 import { HTTPError } from '../interface/error';
 import { UsersRepository } from '../repository/users';
-import { ExtraRequest } from '../middleware/interceptor';
 
 jest.mock('../repository/robots');
 jest.mock('../repository/users');
@@ -24,12 +23,6 @@ const mockData = [
         creationDate: '1997-11-20',
     },
 ];
-
-const mockPayload = {
-    id: '4d5as6',
-    name: 'Clara',
-    role: 'Admin',
-};
 
 describe('Given the robots controller,', () => {
     RobotRepository.prototype.getAll = jest.fn().mockResolvedValue(mockData);
