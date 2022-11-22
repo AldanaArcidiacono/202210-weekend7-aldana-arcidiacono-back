@@ -1,10 +1,15 @@
 import { NextFunction, Request, Response } from 'express';
-import { Data } from '../repository/data.js';
+import { BasicData, Data } from '../repository/data.js';
 import { Robot } from '../entities/robots.js';
 import { HTTPError } from '../interface/error.js';
+import { ExtraRequest } from '../middleware/interceptor.js';
+import { User } from '../entities/users.js';
 
 export class RobotController {
-    constructor(public repository: Data<Robot>) {}
+    constructor(
+        public repository: Data<Robot>,
+        public userRepo: BasicData<User>
+    ) {}
 
     async getAll(_req: Request, res: Response, next: NextFunction) {
         try {
@@ -29,10 +34,15 @@ export class RobotController {
         }
     }
 
-    async post(req: Request, res: Response, next: NextFunction) {
+    async post(req: ExtraRequest, res: Response, next: NextFunction) {
         try {
-            const robots = await this.repository.post(req.body);
-            res.json({ robots });
+            if (!req.payload) {
+                throw new Error('Invalid payload');
+            }
+            const user = await this.userRepo.get(req.payload.id);
+            req.body.owner = user.id;
+            const robot = await this.repository.post(req.body);
+            res.json({ robot });
         } catch (error) {
             const httpError = new HTTPError(
                 503,

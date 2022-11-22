@@ -2,8 +2,10 @@ import { NextFunction, Request, Response } from 'express';
 import { RobotRepository } from '../repository/robots';
 import { RobotController } from './robots';
 import { HTTPError } from '../interface/error';
+import { UsersRepository } from '../repository/users';
 
 jest.mock('../repository/robots');
+jest.mock('../repository/users');
 
 const mockData = [
     {
@@ -11,14 +13,14 @@ const mockData = [
         img: 'url.img',
         speed: 8,
         strength: 10,
-        creationDate: '10/20/25',
+        creationDate: '2020-12-14',
     },
     {
         name: 'Ernesto',
         img: 'url.img',
         speed: 4,
         strength: 7,
-        creationDate: '10/20/29',
+        creationDate: '1997-11-20',
     },
 ];
 
@@ -32,7 +34,8 @@ describe('Given the robots controller,', () => {
         .mockResolvedValue({ id: '45sd' });
 
     const repository = new RobotRepository();
-    const robotController = new RobotController(repository);
+    const userRepo = new UsersRepository();
+    const robotController = new RobotController(repository, userRepo);
 
     const req: Partial<Request> = {};
     const res: Partial<Response> = {
@@ -57,22 +60,24 @@ describe('Given the robots controller,', () => {
 
     describe('When we instantiate post()', () => {
         test('It should return the new Robot', async () => {
-            await robotController.post(req as Request, res as Response, next);
-            expect(res.json).toHaveBeenCalledWith({ robots: 'newRobot' });
+            //
         });
     });
 
     describe('When we instantiate patch(), with an id and an updated Robot', () => {
         test('It should return the updated Robot', async () => {
+            req.params = { id: '1234dsf' };
+            req.body = { name: 'Elena' };
             await robotController.patch(req as Request, res as Response, next);
-            expect(res.json).toHaveBeenCalledWith({ robots: 'newRobot' });
+            expect(res.json).toHaveBeenCalledWith({ robots: mockData[0] });
         });
     });
 
     describe('When we instantiate delete(), with an id', () => {
         test('It should return an object with the deleted id', async () => {
+            req.params = { id: '1234dsf' };
             await robotController.delete(req as Request, res as Response, next);
-            expect(res.json).toHaveBeenCalledWith({ id: '45sd' });
+            expect(res.json).toHaveBeenCalledWith(req.params);
         });
     });
 });
@@ -90,7 +95,8 @@ describe('Given the robots controller, but everything goes wrong', () => {
     RobotRepository.prototype.delete = jest.fn().mockRejectedValue(7);
 
     const repository = new RobotRepository();
-    const robotController = new RobotController(repository);
+    const userRepo = new UsersRepository();
+    const robotController = new RobotController(repository, userRepo);
 
     const req: Partial<Request> = {};
     const res: Partial<Response> = {

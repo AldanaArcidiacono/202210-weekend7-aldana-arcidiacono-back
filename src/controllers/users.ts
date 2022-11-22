@@ -1,13 +1,15 @@
 import { NextFunction, Request, Response } from 'express';
+import { Robot } from '../entities/robots.js';
 import { User } from '../entities/users.js';
 import { HTTPError } from '../interface/error.js';
-import { BasicData } from '../repository/data.js';
+import { BasicData, Data } from '../repository/data.js';
 import { createToken, passwdValidate } from '../services/auth.js';
 
 export class UsersController {
-    constructor(public repository: BasicData<User>) {
-        //
-    }
+    constructor(
+        public readonly repository: BasicData<User>,
+        public readonly robotRepo: Data<Robot>
+    ) {}
 
     async register(req: Request, res: Response, next: NextFunction) {
         try {
@@ -25,13 +27,18 @@ export class UsersController {
 
     async login(req: Request, res: Response, next: NextFunction) {
         try {
-            const user = await this.repository.findOne({ name: req.body.name });
+            const user = await this.repository.find({ name: req.body.name });
+            user.id;
             const isPasswdValid = await passwdValidate(
                 req.body.password,
                 user.password
             );
             if (!isPasswdValid) throw new Error('Wrong password');
-            const token = createToken({ userName: user.name });
+            const token = createToken({
+                id: user.id,
+                name: user.name,
+                role: user.role,
+            });
             res.json({ token });
         } catch (error) {
             next(this.createHttpError(error as Error));

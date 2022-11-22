@@ -1,8 +1,10 @@
 import { NextFunction, Request, Response } from 'express';
 import { CustomError, HTTPError } from '../interface/error';
+import { RobotRepository } from '../repository/robots';
 import { UsersRepository } from '../repository/users';
 import { UsersController } from './users';
 
+jest.mock('../repository/robots');
 jest.mock('../repository/users');
 
 const mockData = [
@@ -24,8 +26,9 @@ describe('Given the users controller,', () => {
     UsersRepository.prototype.get = jest.fn().mockResolvedValue(mockData);
     UsersRepository.prototype.post = jest.fn().mockResolvedValue(mockData[0]);
 
-    const repository = new UsersRepository();
-    const userController = new UsersController(repository);
+    const repository = new RobotRepository();
+    const userRepo = new UsersRepository();
+    const userController = new UsersController(userRepo, repository);
 
     const req: Partial<Request> = {};
     const res: Partial<Response> = {
@@ -55,8 +58,11 @@ describe('Given the users controller, but everything goes wrong', () => {
 
     UsersRepository.prototype.get = jest.fn().mockRejectedValue('User');
     UsersRepository.prototype.post = jest.fn().mockRejectedValue(['User']);
-    const repository = new UsersRepository();
-    const userController = new UsersController(repository);
+
+    const repository = new RobotRepository();
+    const userRepo = new UsersRepository();
+    const userController = new UsersController(userRepo, repository);
+
     const req: Partial<Request> = {};
     const res: Partial<Response> = {
         json: jest.fn(),

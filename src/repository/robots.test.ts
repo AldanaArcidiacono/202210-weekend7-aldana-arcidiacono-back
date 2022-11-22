@@ -51,6 +51,13 @@ describe('Given the robots repository,', () => {
         });
     });
 
+    describe('When we instantiate find(), with an id', () => {
+        test('It should return the search', async () => {
+            const result = await repository.find(mockData[0]);
+            expect(result.name).toEqual(mockData[0].name);
+        });
+    });
+
     describe('When we instantiate post()', () => {
         test('It should return the new Robot', async () => {
             const newRobot = {
