@@ -48,3 +48,40 @@ Sobra decirlo: **TESTEAMOS** todo y lo mostramos en **SonarCloud**.
 -   FRONT: Añadir formulario de crear/registrar nuevos usuarios
 -   FRONT: Añadir formulario de login para los usuarios
 -   FRONT: Añadir el header de Authorization para poder acceder a los endpoints de robots protegidos en el backend cuando el usuario ha hecho login
+
+# Challenge 2 Week 8 - Ampliar Challenge Robots
+
+## TESTEAR
+
+-   BACK: Modificar modelo Robots para asociarlo a un usuario
+    Cada robot 1 owner
+    Cada user n robots
+
+## TESTEAR
+
+// NO - BACK: Modificar el end-point de robots para que también retorne los datos completos de el / los usuarios
+
+## TESTEAR
+
+## Extras
+
+-   BACK: Completar los CRUDS de robots y usuarios
+
+    usuarios: - Register - Login
+    robots: - get - post (login) - patch / delete (login / owner [who] )
+
+## TESTEAR
+
+-   FRONT:
+    -   Users
+        -   Login / logout
+        -   Register
+    -   Robots
+        -   Lista (public)
+        -   Add (private)
+        -   Update (private)
+        -   Delete (private)
+
+// NO - FRONT: Modificar la lista de robots para que también muestre el/los usuarios
+
+// NO - FRONT: Añadir un filtro de robots por usuarios
