@@ -1,44 +1,83 @@
-import mongoose, { model } from 'mongoose';
-import { ProtoRobot, Robot, robotSchema } from '../entities/robots.js';
+import mongoose, { Types } from 'mongoose';
+import { ProtoRobotI, RobotI, Robot } from '../entities/robots.js';
 import { Data, id } from './data.js';
+import createDebug from 'debug';
+const debug = createDebug('W7CH:repository:robots');
 
-export class RobotRepository implements Data<Robot> {
-    #Model = model('Robot', robotSchema, 'robots');
+export class RobotRepository implements Data<RobotI> {
+    static instance: RobotRepository;
 
-    async getAll(): Promise<Array<Robot>> {
-        return this.#Model.find();
+    public static getInstance(): RobotRepository {
+        if (!RobotRepository.instance) {
+            RobotRepository.instance = new RobotRepository();
+        }
+        return RobotRepository.instance;
     }
 
-    async get(id: id): Promise<Robot> {
-        const result = await this.#Model.findById(id);
-        if (!result) throw new Error('Not found id');
-        return result as Robot;
+    #Model = Robot;
+
+    private constructor() {
+        debug('instance');
     }
 
-    async find(search: {
-        [key: string]: string | number | Date;
-    }): Promise<Robot> {
-        const result = (await this.#Model.findOne(search)) as Robot;
+    async getAll(): Promise<Array<RobotI>> {
+        debug('getAll');
+        return this.#Model.find().populate('owner', {
+            robots: 0,
+        });
+    }
+
+    async get(id: id): Promise<RobotI> {
+        debug('get', id);
+        const result = await this.#Model
+            .findById(id)
+            .populate<{ _id: Types.ObjectId }>('owner');
         if (!result) throw new Error('Not found id');
         return result;
     }
 
-    async post(newRobot: ProtoRobot): Promise<Robot> {
-        newRobot.date = this.#generateDate(newRobot.date as string);
-        const result = await this.#Model.create(newRobot);
-        return result as Robot;
-    }
-
-    async patch(id: id, updateRobot: Partial<Robot>): Promise<Robot> {
-        const result = await this.#Model.findByIdAndUpdate(id, updateRobot, {
-            new: true,
+    async find(search: {
+        [key: string]: string | number | Date;
+    }): Promise<RobotI> {
+        debug('find', { search });
+        const result = await this.#Model.findOne(search).populate('owner', {
+            robots: 0,
         });
         if (!result) throw new Error('Not found id');
-        return result as Robot;
+        return result as RobotI;
+    }
+
+    async post(newRobot: ProtoRobotI): Promise<RobotI> {
+        debug('post', newRobot);
+        newRobot.date = this.#generateDate(newRobot.date as string);
+        const result = await (
+            await this.#Model.create(newRobot)
+        ).populate('owner', {
+            robots: 0,
+        });
+        return result;
+    }
+
+    async patch(id: id, updateRobot: Partial<RobotI>): Promise<RobotI> {
+        debug('patch', id);
+        const result = await this.#Model
+            .findByIdAndUpdate(id, updateRobot, {
+                new: true,
+            })
+            .populate('owner', {
+                robots: 0,
+            });
+        if (!result) throw new Error('Not found id');
+        return result;
     }
 
     async delete(id: id): Promise<{ id: id }> {
-        const result = await this.#Model.findByIdAndDelete(id);
+        debug('delete', id);
+        const result = await this.#Model
+            .findByIdAndDelete(id)
+            .populate('owner', {
+                robots: 0,
+            });
         if (result === null) throw new Error('Not found id');
         return { id: id };
     }
