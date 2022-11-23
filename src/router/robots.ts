@@ -7,12 +7,12 @@ import { UsersRepository } from '../repository/users.js';
 export const robotsRouter = Router();
 
 const controller = new RobotController(
-    new RobotRepository(),
-    new UsersRepository()
+    RobotRepository.getInstance(),
+    UsersRepository.getInstance()
 );
 
 robotsRouter.get('/', controller.getAll.bind(controller));
-robotsRouter.get('/:idRobot', logged, controller.get.bind(controller));
+robotsRouter.get('/:idRobot', controller.get.bind(controller));
 robotsRouter.post('/create', logged, controller.post.bind(controller));
 robotsRouter.patch(
     '/update/:idRobot',

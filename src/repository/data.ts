@@ -11,6 +11,11 @@ export interface ExtraData<T> {
     patch: (id: id, data: Partial<T>) => Promise<T>;
     delete: (id: id) => Promise<void>;
 }
+
+// export interface UserData<T> extends BasicData<T> {
+//     addRobot: (user: User, robot: Robot) => Promise<T>;
+// }
+
 export interface Data<T> extends BasicData<T> {
     getAll: () => Promise<Array<T>>;
     patch: (id: id, data: Partial<T>) => Promise<T>;

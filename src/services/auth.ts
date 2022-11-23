@@ -2,7 +2,7 @@ import jwt from 'jsonwebtoken';
 import bc from 'bcryptjs';
 import { SECRET } from '../config.js';
 
-type TokenPayload = {
+export type TokenPayload = {
     id: string;
     name: string;
     role: string;
@@ -21,8 +21,8 @@ export const createToken = (payload: TokenPayload) => {
 
 export const verifyToken = (token: string) => {
     const payload = jwt.verify(token, getSecret());
-    if (typeof payload === 'string') throw new Error('Token not valid');
-    return payload;
+    // if (typeof payload === 'string') throw new Error('Token not valid');
+    return payload as jwt.JwtPayload;
 };
 
 export const passwdEncrypt = (passwd: string) => {
