@@ -27,8 +27,7 @@ const setCollection = async () => {
     return testIds;
 };
 
-describe('Given an app with "/robots/" route', () => {
-    let token: string;
+describe('Given an app with "/users/" route', () => {
     let ids: Array<string>;
 
     beforeEach(async () => {
@@ -39,14 +38,13 @@ describe('Given an app with "/robots/" route', () => {
             name: 'Pepe',
             role: 'Admin',
         };
-        token = createToken(payload);
     });
 
     afterEach(async () => {
         await mongoose.disconnect();
     });
 
-    describe('When we have connection to mongoDB', () => {
+    describe('When we connect with MongoDB', () => {
         test('Then the post() to url /register should send an status 201', async () => {
             const response = await request(app).post('/users/register').send({
                 name: 'Amelia',
@@ -57,7 +55,7 @@ describe('Given an app with "/robots/" route', () => {
             expect(response.status).toBe(201);
         });
 
-        test('Then the post() to url /register without a name should send an status 503', async () => {
+        test('Then the post() to url /register with bad information should send an status 503', async () => {
             const response = await request(app).post('/users/register').send({
                 name: '',
                 email: 'ameliawho@gmail.com',
@@ -67,7 +65,7 @@ describe('Given an app with "/robots/" route', () => {
             expect(response.status).toBe(503);
         });
 
-        test('Then the post() to url /login with a wrong password should send an status 503', async () => {
+        test('Then with the post on the url /login with a wrong password should send an status 503', async () => {
             const response = await request(app).post('/users/login').send({
                 name: 'Pepe',
                 password: 'adsjk',
