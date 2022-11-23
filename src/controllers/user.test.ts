@@ -7,48 +7,6 @@ import { UsersController } from './users';
 jest.mock('../repository/robots');
 jest.mock('../repository/users');
 
-const mockData = [
-    {
-        name: 'Pepe',
-        email: 'pepe@gmail.com',
-        password: 'pepe1234',
-        role: 'Admin',
-    },
-    {
-        name: 'Ernesto',
-        email: 'ernest@gmail.com',
-        password: '789ErnesT',
-        role: 'Empleado',
-    },
-];
-
-describe('Given the users controller,', () => {
-    UsersRepository.prototype.get = jest.fn().mockResolvedValue(mockData);
-    UsersRepository.prototype.post = jest.fn().mockResolvedValue(mockData[0]);
-
-    const repository = new RobotRepository();
-    const userRepo = new UsersRepository();
-    const userController = new UsersController(userRepo, repository);
-
-    const req: Partial<Request> = {};
-    const res: Partial<Response> = {
-        json: jest.fn(),
-    };
-    const next: NextFunction = jest.fn();
-
-    describe('When we instantiate register(),', () => {
-        test('It should create a new user', async () => {
-            req.params = mockData[0];
-            await userController.register(
-                req as Request,
-                res as Response,
-                next
-            );
-            expect(res.json).toHaveBeenCalledWith({ user: mockData[0] });
-        });
-    });
-});
-
 describe('Given the users controller, but everything goes wrong', () => {
     const error: CustomError = new HTTPError(
         404,
@@ -59,8 +17,8 @@ describe('Given the users controller, but everything goes wrong', () => {
     UsersRepository.prototype.get = jest.fn().mockRejectedValue('User');
     UsersRepository.prototype.post = jest.fn().mockRejectedValue(['User']);
 
-    const repository = new RobotRepository();
-    const userRepo = new UsersRepository();
+    const repository = RobotRepository.getInstance();
+    const userRepo = UsersRepository.getInstance();
     const userController = new UsersController(userRepo, repository);
 
     const req: Partial<Request> = {};

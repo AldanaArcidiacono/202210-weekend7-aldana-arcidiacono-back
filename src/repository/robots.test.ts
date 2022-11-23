@@ -1,33 +1,19 @@
 import { MongooseError } from 'mongoose';
 import { dbConnect } from '../db.conect';
+import { Robot } from '../entities/robots';
 import { RobotRepository } from './robots';
 
-const mockData = [
-    {
-        name: 'Pepe',
-        img: 'url.img',
-        speed: 8,
-        strength: 10,
-        creationDate: '10/20/25',
-    },
-    {
-        name: 'Ernesto',
-        img: 'url.img',
-        speed: 4,
-        strength: 7,
-        creationDate: '10/20/29',
-    },
-];
+const mockData = [{ name: 'Pepe' }, { name: 'Ernesto' }];
 
 describe('Given the robots repository,', () => {
-    const repository = new RobotRepository();
+    const repository = RobotRepository.getInstance();
     let testIds: Array<string>;
 
     beforeAll(async () => {
         await dbConnect();
-        await repository.getModel().deleteMany();
-        await repository.getModel().insertMany(mockData);
-        const data = await repository.getModel().find();
+        await Robot.deleteMany();
+        await Robot.insertMany(mockData);
+        const data = await Robot.find();
         testIds = [data[0].id, data[1].id];
     });
 
@@ -60,13 +46,7 @@ describe('Given the robots repository,', () => {
 
     describe('When we instantiate post()', () => {
         test('It should return the new Robot', async () => {
-            const newRobot = {
-                name: 'Elena',
-                img: 'url.img',
-                speed: 4,
-                strength: 8,
-                creationDate: '10/20/15',
-            };
+            const newRobot = { name: 'Elena' };
             const result = await repository.post(newRobot);
             expect(result.name).toEqual(newRobot.name);
         });
@@ -74,9 +54,7 @@ describe('Given the robots repository,', () => {
 
     describe('When we instantiate patch(), with an id and an updated Robot', () => {
         test('It should return the updated Robot', async () => {
-            const updatedRobot = {
-                name: 'Jose',
-            };
+            const updatedRobot = { name: 'Jose' };
             const result = await repository.patch(testIds[0], updatedRobot);
             expect(result.name).toEqual(updatedRobot.name);
         });

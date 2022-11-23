@@ -18,7 +18,7 @@ describe('Given UserRepository', () => {
         },
     ];
 
-    const repository = new UsersRepository();
+    const repository = UsersRepository.getInstance();
     let testIds: Array<string>;
     beforeAll(async () => {
         await dbConnect();
