@@ -1,18 +1,15 @@
 import { Request, Response, NextFunction } from 'express';
-import { CustomError } from '../interface/error';
+import { CustomError } from '../interface/error.js';
+import createDebug from 'debug';
+const debug = createDebug('W7CH:middleware:errors');
 
 export const errorManager = (
     error: CustomError,
     _req: Request,
     resp: Response,
-    _next: NextFunction
+    next: NextFunction
 ) => {
-    console.log(
-        error.name,
-        error.statusCode,
-        error.statusMessage,
-        error.message
-    );
+    debug(error.name, error.statusCode, error.statusMessage, error.message);
     let status = error.statusCode || 500;
     if (error.name === 'ValidationError') {
         status = 406;
