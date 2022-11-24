@@ -3,7 +3,6 @@ import request from 'supertest';
 import { app } from '../app';
 import { dbConnect } from '../db.conect';
 import { User } from '../entities/users';
-import { TokenPayload } from '../services/auth';
 
 const setCollection = async () => {
     const mockData = [
@@ -29,11 +28,9 @@ const setCollection = async () => {
 
 describe('Given an app with "/users/" route', () => {
     describe('When we connect with MongoDB', () => {
-        let ids: Array<string>;
-
         beforeEach(async () => {
             await dbConnect();
-            ids = await setCollection();
+            await setCollection();
         });
 
         afterEach(async () => {
