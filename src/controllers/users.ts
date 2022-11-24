@@ -34,7 +34,6 @@ export class UsersController {
         try {
             debug('login', req.body.name);
             const user = await this.repository.find({ name: req.body.name });
-            //user.id;
             const isPasswdValid = await passwdValidate(
                 req.body.password,
                 user.password
