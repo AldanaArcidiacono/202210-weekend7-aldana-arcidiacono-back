@@ -34,11 +34,6 @@ describe('Given an app with "/users/" route', () => {
         beforeEach(async () => {
             await dbConnect();
             ids = await setCollection();
-            const payload: TokenPayload = {
-                id: ids[0],
-                name: 'Pepe',
-                role: 'Admin',
-            };
         });
 
         afterEach(async () => {
