@@ -4,11 +4,7 @@ import { RobotController } from './robots';
 import { HTTPError } from '../interface/error';
 import { UsersRepository } from '../repository/users';
 
-// jest.mock('../repository/robots');
-// jest.mock('../repository/users');
-
 const mockData = [{ name: 'Pepe' }, { name: 'Ernesto' }];
-const mockResponse = { robots: ['bot'] };
 
 describe('Given the robots controller,', () => {
     const repository = RobotRepository.getInstance();
@@ -16,7 +12,7 @@ describe('Given the robots controller,', () => {
 
     repository.getAll = jest.fn().mockResolvedValue(['bot']);
     repository.get = jest.fn().mockResolvedValue(['bot']);
-    //repository.post = jest.fn().mockResolvedValue('newRobot');
+    repository.post = jest.fn().mockResolvedValue('newRobot');
     repository.patch = jest.fn().mockResolvedValue(mockData[0]);
     repository.delete = jest.fn().mockResolvedValue({ id: '45sd' });
 
@@ -27,6 +23,8 @@ describe('Given the robots controller,', () => {
         json: jest.fn(),
     };
     const next: NextFunction = jest.fn();
+
+    const mockResponse = { robots: ['bot'] };
 
     describe('When we instantiate getAll()', () => {
         test('It should return an array of all Robots', async () => {
