@@ -23,7 +23,6 @@ export const logged = (
     }
     try {
         const token = authString.slice(7);
-        verifyToken(token);
         req.payload = verifyToken(token);
         next();
     } catch (error) {

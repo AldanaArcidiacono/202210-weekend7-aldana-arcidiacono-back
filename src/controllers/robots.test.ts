@@ -41,12 +41,6 @@ describe('Given the robots controller,', () => {
         });
     });
 
-    //     describe('When we instantiate post()', () => {
-    //         test('It should return the new Robot', async () => {
-    //             //
-    //         });
-    //     });
-
     describe('When we instantiate patch(), with an id and an updated Robot', () => {
         test('It should return the updated Robot', async () => {
             req.params = { id: '1234dsf' };

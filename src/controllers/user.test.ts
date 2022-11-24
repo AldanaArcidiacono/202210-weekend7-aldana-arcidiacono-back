@@ -4,9 +4,6 @@ import { RobotRepository } from '../repository/robots';
 import { UsersRepository } from '../repository/users';
 import { UsersController } from './users';
 
-jest.mock('../repository/robots');
-jest.mock('../repository/users');
-
 describe('Given the users controller, but everything goes wrong', () => {
     const error: CustomError = new HTTPError(
         404,
