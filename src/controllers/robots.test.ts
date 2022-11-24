@@ -3,15 +3,21 @@ import { RobotRepository } from '../repository/robots';
 import { RobotController } from './robots';
 import { HTTPError } from '../interface/error';
 import { UsersRepository } from '../repository/users';
+import { ExtraRequest } from '../middleware/interceptor';
 
-const mockData = [{ name: 'Pepe' }, { name: 'Ernesto' }];
+const mockData = [
+    { name: 'Pepe', id: '4as56d' },
+    { name: 'Ernesto', id: '7e8rw' },
+];
+
+const mockResponse = { robots: ['bot'] };
 
 describe('Given the robots controller,', () => {
     const repository = RobotRepository.getInstance();
     const userRepo = UsersRepository.getInstance();
 
     repository.getAll = jest.fn().mockResolvedValue(['bot']);
-    repository.get = jest.fn().mockResolvedValue(['bot']);
+    repository.get = jest.fn().mockResolvedValue(mockData[0]);
     repository.post = jest.fn().mockResolvedValue('newRobot');
     repository.patch = jest.fn().mockResolvedValue(mockData[0]);
     repository.delete = jest.fn().mockResolvedValue({ id: '45sd' });
@@ -24,8 +30,6 @@ describe('Given the robots controller,', () => {
     };
     const next: NextFunction = jest.fn();
 
-    const mockResponse = { robots: ['bot'] };
-
     describe('When we instantiate getAll()', () => {
         test('It should return an array of all Robots', async () => {
             await robotController.getAll(req as Request, res as Response, next);
@@ -35,9 +39,20 @@ describe('Given the robots controller,', () => {
 
     describe('When we instantiate get(), with an id', () => {
         test('It should return the Robot of that id', async () => {
-            req.params = { id: '45sd' };
+            req.params = { id: '4as56d' };
             await robotController.get(req as Request, res as Response, next);
             expect(res.json).toHaveBeenCalledWith(mockResponse);
+        });
+    });
+
+    describe('When we instantiate post()', () => {
+        test('It should return a new Robot', async () => {
+            await robotController.post(
+                req as ExtraRequest,
+                res as Response,
+                next
+            );
+            expect(res.json).toHaveBeenCalledWith({ robots: mockData[0] });
         });
     });
 
@@ -65,7 +80,6 @@ describe('Given the robots controller, but everything goes wrong', () => {
         error = new HTTPError(404, 'Not found id', 'message of error');
     });
 
-    RobotRepository.prototype.getAll = jest.fn().mockRejectedValue(['Robot']);
     RobotRepository.prototype.get = jest.fn().mockRejectedValue(['Robot']);
     RobotRepository.prototype.post = jest.fn().mockRejectedValue(['Robot']);
     RobotRepository.prototype.patch = jest.fn().mockRejectedValue(['Robot']);
@@ -83,6 +97,7 @@ describe('Given the robots controller, but everything goes wrong', () => {
 
     describe('When we instantiate getAll()', () => {
         test('It should throw an error', async () => {
+            repository.getAll = jest.fn().mockRejectedValue('');
             await robotController.getAll(req as Request, res as Response, next);
             expect(error).toBeInstanceOf(Error);
             expect(error).toBeInstanceOf(HTTPError);

@@ -2,11 +2,15 @@ import { NextFunction, Request, Response } from 'express';
 import { CustomError, HTTPError } from '../interface/error';
 import { RobotRepository } from '../repository/robots';
 import { UsersRepository } from '../repository/users';
+import { createToken, passwdValidate } from '../services/auth';
 import { UsersController } from './users';
 
 jest.mock('../services/auth');
 
-const mockData = [{ name: 'Pepe' }, { name: 'Ernesto' }];
+const mockData = [
+    { name: 'Pepe', role: 'Admin', id: '4as56d' },
+    { name: 'Ernesto', role: 'user', id: 'a4sd8a' },
+];
 
 describe('Given the users controller,', () => {
     let repository: RobotRepository;
@@ -20,8 +24,8 @@ describe('Given the users controller,', () => {
         repository = RobotRepository.getInstance();
         userRepo = UsersRepository.getInstance();
 
-        userRepo.get = jest.fn().mockResolvedValue(mockData[0]);
         userRepo.post = jest.fn().mockResolvedValue(mockData[0]);
+        userRepo.find = jest.fn().mockResolvedValue(mockData[0]);
         userController = new UsersController(userRepo, repository);
 
         req = {};
@@ -40,6 +44,21 @@ describe('Given the users controller,', () => {
                 next
             );
             expect(res.json).toHaveBeenCalledWith({ user: mockData[0] });
+        });
+    });
+
+    describe('When we instantiate login()', () => {
+        test('With an invalid password it should throw an error', async () => {
+            const error: CustomError = new HTTPError(
+                404,
+                'Not found id',
+                'message of error'
+            );
+            (passwdValidate as jest.Mock).mockResolvedValue(false);
+            (createToken as jest.Mock).mockReturnValue('token');
+            req.body = { password: 'password' };
+            await userController.login(req as Request, res as Response, next);
+            expect(error).toBeInstanceOf(HTTPError);
         });
     });
 });
@@ -68,7 +87,7 @@ describe('Given the users controller, but everything goes wrong', () => {
         expect(error).toBeInstanceOf(HTTPError);
     });
 
-    describe('When we instantiate post()', () => {
+    describe('When we instantiate login()', () => {
         test('It should throw an error', async () => {
             await userController.login(req as Request, res as Response, next);
             expect(error).toBeInstanceOf(Error);
