@@ -20,25 +20,25 @@ const setCollection = async () => {
 };
 
 describe('Given an app with "/robots/" route', () => {
-    let token: string;
-    let ids: Array<string>;
-
-    beforeEach(async () => {
-        await dbConnect();
-        ids = await setCollection();
-        const payload: TokenPayload = {
-            id: ids[0],
-            name: 'Pepe',
-            role: 'Admin',
-        };
-        token = createToken(payload);
-    });
-
-    afterEach(async () => {
-        await mongoose.disconnect();
-    });
-
     describe('When we have connection to mongoDB', () => {
+        let token: string;
+        let ids: Array<string>;
+
+        beforeEach(async () => {
+            await dbConnect();
+            ids = await setCollection();
+            const payload: TokenPayload = {
+                id: ids[0],
+                name: 'Pepe',
+                role: 'Admin',
+            };
+            token = createToken(payload);
+        });
+
+        afterEach(async () => {
+            await mongoose.disconnect();
+        });
+
         test('Then the get() to url / should send an status 200', async () => {
             await request(app).get('/robots/').expect(200);
         });
